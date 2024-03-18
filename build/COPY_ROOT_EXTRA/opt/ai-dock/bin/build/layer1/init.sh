@@ -5,13 +5,22 @@
 # Packages are installed after nodes so we can fix them...
 PYTHON_PACKAGES=(
     "opencv-python==4.7.0.72"
+    "onnxruntime==1.17.1"
+    "onnxruntime-gpu==1.17.1"
+    "insightface==0.7.3"
 )
 
 NODES=(
-    #"https://github.com/ltdrdata/ComfyUI-Manager"
+    "https://github.com/ltdrdata/ComfyUI-Manager"
+    "https://github.com/jags111/efficiency-nodes-comfyui"
+    "https://github.com/ltdrdata/ComfyUI-Impact-Pack"
+    "https://github.com/cubiq/ComfyUI_InstantID"
+    "https://github.com/BlenderNeko/ComfyUI_ADV_CLIP_emb"
+    "https://github.com/storyicon/comfyui_segment_anything"
 )
 
 CHECKPOINT_MODELS=(
+     "https://civitai.com/api/download/models/354657"
     #"https://huggingface.co/runwayml/stable-diffusion-v1-5/resolve/main/v1-5-pruned-emaonly.ckpt"
     #"https://huggingface.co/stabilityai/stable-diffusion-2-1/resolve/main/v2-1_768-ema-pruned.ckpt"
     #"https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0/resolve/main/sd_xl_base_1.0.safetensors"
@@ -20,6 +29,7 @@ CHECKPOINT_MODELS=(
 
 LORA_MODELS=(
     #"https://civitai.com/api/download/models/16576"
+    "https://civitai.com/api/download/models/177940"
 )
 
 VAE_MODELS=(
@@ -35,6 +45,7 @@ ESRGAN_MODELS=(
 )
 
 CONTROLNET_MODELS=(
+    "https://huggingface.co/InstantX/InstantID/resolve/main/ControlNetModel/diffusion_pytorch_model.safetensors"
     #"https://huggingface.co/webui/ControlNet-modules-safetensors/resolve/main/control_canny-fp16.safetensors"
     #"https://huggingface.co/webui/ControlNet-modules-safetensors/resolve/main/control_depth-fp16.safetensors"
     #"https://huggingface.co/kohya-ss/ControlNet-diff-modules/resolve/main/diff_control_sd15_depth_fp16.safetensors"
@@ -75,6 +86,25 @@ function build_extra_start() {
         "/opt/storage/stable_diffusion/models/esrgan" \
         "${ESRGAN_MODELS[@]}"
      
+     # Download models for instandid
+    wget -qnc --content-disposition  -P /opt/storage/stable_diffusion/models/insightface/models "https://huggingface.co/MonsterMMORPG/tools/resolve/main/antelopev2.zip"
+    unzip -q -o /opt/storage/stable_diffusion/models/insightface/models/antelopev2.zip -d /opt/storage/stable_diffusion/models/insightface/models/
+    wget -qnc --content-disposition  -P /opt/storage/stable_diffusion/models/instantid "https://huggingface.co/InstantX/InstantID/resolve/main/ip-adapter.bin"
+     
+    # Download grounding dino model
+    wget -qnc --content-disposition  -P /opt/storage/stable_diffusion/models/grounding-dino "https://huggingface.co/ShilongLiu/GroundingDINO/resolve/main/GroundingDINO_SwinT_OGC.cfg.py"
+    wget -qnc --content-disposition  -P /opt/storage/stable_diffusion/models/grounding-dino "https://huggingface.co/ShilongLiu/GroundingDINO/resolve/main/groundingdino_swint_ogc.pth"
+
+    # Download models for bert base uncased
+    wget -qnc --content-disposition  -P /opt/storage/stable_diffusion/models/bert-base-uncased "https://huggingface.co/google-bert/bert-base-uncased/resolve/main/model.safetensors"
+    wget -qnc --content-disposition  -P /opt/storage/stable_diffusion/models/bert-base-uncased "https://huggingface.co/google-bert/bert-base-uncased/resolve/main/vocab.txt"
+    wget -qnc --content-disposition  -P /opt/storage/stable_diffusion/models/bert-base-uncased "https://huggingface.co/google-bert/bert-base-uncased/resolve/main/tokenizer_config.json"
+    wget -qnc --content-disposition  -P /opt/storage/stable_diffusion/models/bert-base-uncased "https://huggingface.co/google-bert/bert-base-uncased/resolve/main/config.json"
+    wget -qnc --content-disposition  -P /opt/storage/stable_diffusion/models/bert-base-uncased "https://huggingface.co/google-bert/bert-base-uncased/resolve/main/tokenizer.json"
+
+    # Download models for segment anything
+    wget -qnc --content-disposition  -P /opt/storage/stable_diffusion/models/sams "https://dl.fbaipublicfiles.com/segment_anything/sam_vit_b_01ec64.pth"
+
     cd /opt/ComfyUI && \
     micromamba run -n comfyui -e LD_PRELOAD=libtcmalloc.so python main.py \
         --cpu \
