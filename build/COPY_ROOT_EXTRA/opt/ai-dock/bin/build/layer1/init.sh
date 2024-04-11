@@ -17,7 +17,7 @@ NODES=(
     "https://github.com/cubiq/ComfyUI_InstantID"
     "https://github.com/BlenderNeko/ComfyUI_ADV_CLIP_emb"
     "https://github.com/storyicon/comfyui_segment_anything"
-    "https://github.com/brianfitzgerald/style_aligned_comfy"
+    "https://github.com/cubiq/ComfyUI_IPAdapter_plus"
 )
 
 CHECKPOINT_MODELS=(
@@ -26,7 +26,6 @@ CHECKPOINT_MODELS=(
     #"https://huggingface.co/stabilityai/stable-diffusion-2-1/resolve/main/v2-1_768-ema-pruned.ckpt"
     #"https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0/resolve/main/sd_xl_base_1.0.safetensors"
     #"https://huggingface.co/stabilityai/stable-diffusion-xl-refiner-1.0/resolve/main/sd_xl_refiner_1.0.safetensors"
-    "https://huggingface.co/stabilityai/stable-cascade/resolve/main/comfyui_checkpoints/stable_cascade_stage_b.safetensors"
     "https://huggingface.co/stabilityai/stable-cascade/resolve/main/comfyui_checkpoints/stable_cascade_stage_c.safetensors"
 )
 
@@ -44,12 +43,12 @@ VAE_MODELS=(
 ESRGAN_MODELS=(
     #"https://huggingface.co/ai-forever/Real-ESRGAN/resolve/main/RealESRGAN_x4.pth"
     #"https://huggingface.co/FacehugmanIII/4x_foolhardy_Remacri/resolve/main/4x_foolhardy_Remacri.pth"
-    #"https://huggingface.co/Akumetsu971/SD_Anime_Futuristic_Armor/resolve/main/4x_NMKD-Siax_200k.pth"
+    "https://huggingface.co/Akumetsu971/SD_Anime_Futuristic_Armor/resolve/main/4x_NMKD-Siax_200k.pth"
 )
 
 CONTROLNET_MODELS=(
     "https://huggingface.co/InstantX/InstantID/resolve/main/ControlNetModel/diffusion_pytorch_model.safetensors"
-    "https://huggingface.co/stabilityai/stable-cascade/resolve/main/controlnet/canny.safetensors"
+    # "https://huggingface.co/stabilityai/stable-cascade/resolve/main/controlnet/canny.safetensors"
     #"https://huggingface.co/webui/ControlNet-modules-safetensors/resolve/main/control_canny-fp16.safetensors"
     #"https://huggingface.co/webui/ControlNet-modules-safetensors/resolve/main/control_depth-fp16.safetensors"
     #"https://huggingface.co/kohya-ss/ControlNet-diff-modules/resolve/main/diff_control_sd15_depth_fp16.safetensors"
@@ -68,7 +67,6 @@ CONTROLNET_MODELS=(
     #"https://huggingface.co/webui/ControlNet-modules-safetensors/resolve/main/t2iadapter_sketch-fp16.safetensors"
     #"https://huggingface.co/webui/ControlNet-modules-safetensors/resolve/main/t2iadapter_style-fp16.safetensors"
 )
-
 ### DO NOT EDIT BELOW HERE UNLESS YOU KNOW WHAT YOU ARE DOING ###
 
 function build_extra_start() {
@@ -89,9 +87,20 @@ function build_extra_start() {
     build_extra_get_models \
         "/opt/storage/stable_diffusion/models/esrgan" \
         "${ESRGAN_MODELS[@]}"
+
+    # Downoad clip vision
+    wget -qnc --content-disposition "https://huggingface.co/h94/IP-Adapter/resolve/main/models/image_encoder/model.safetensors" -O /opt/storage/stable_diffusion/models/clip_vision/CLIP-ViT-H-14-laion2B-s32B-b79K.safetensors
      
-     # Download models for instandid
+    # Download ipadapter
+
+    wget -qnc --content-disposition "https://huggingface.co/h94/IP-Adapter/resolve/main/sdxl_models/ip-adapter-plus_sdxl_vit-h.safetensors" -P /opt/storage/stable_diffusion/models/ipadapter
+
+    wget -qnc --content-disposition "https://huggingface.co/ostris/ip-composition-adapter/resolve/main/ip_plus_composition_sdxl.safetensors" -P /opt/storage/stable_diffusion/models/ipadapter
+
+    # Download models for instandid
     wget -qnc --content-disposition  -P /opt/storage/stable_diffusion/models/insightface/models "https://huggingface.co/MonsterMMORPG/tools/resolve/main/antelopev2.zip"
+
+
     unzip -q -o /opt/storage/stable_diffusion/models/insightface/models/antelopev2.zip -d /opt/storage/stable_diffusion/models/insightface/models/
     wget -qnc --content-disposition  -P /opt/storage/stable_diffusion/models/instantid "https://huggingface.co/InstantX/InstantID/resolve/main/ip-adapter.bin"
      
