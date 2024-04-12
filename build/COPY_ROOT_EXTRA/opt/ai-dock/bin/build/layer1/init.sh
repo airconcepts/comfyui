@@ -89,6 +89,7 @@ function build_extra_start() {
         "${ESRGAN_MODELS[@]}"
 
     # Downoad clip vision
+    mkdir -p /opt/storage/stable_diffusion/models/clip_vision
     wget -qnc --content-disposition "https://huggingface.co/h94/IP-Adapter/resolve/main/models/image_encoder/model.safetensors" -O /opt/storage/stable_diffusion/models/clip_vision/CLIP-ViT-H-14-laion2B-s32B-b79K.safetensors
      
     # Download ipadapter
