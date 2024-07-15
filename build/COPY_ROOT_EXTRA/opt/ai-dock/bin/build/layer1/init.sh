@@ -119,6 +119,15 @@ function build_extra_start() {
     # Download models for segment anything
     wget -qnc --content-disposition  -P /opt/storage/stable_diffusion/models/sams "https://dl.fbaipublicfiles.com/segment_anything/sam_vit_b_01ec64.pth"
 
+    # Download controlnet models
+    wget -qnc --content-disposition  "https://huggingface.co/TencentARC/t2i-adapter-lineart-sdxl-1.0/resolve/main/diffusion_pytorch_model.fp16.safetensors" -O /opt/storage/stable_diffusion/models/controlnet/t2iadapter_lineart-fp16.safetensors
+    wget -qnc --content-disposition  "https://huggingface.co/TencentARC/t2i-adapter-sketch-sdxl-1.0/resolve/main/diffusion_pytorch_model.fp16.safetensors" -O /opt/storage/stable_diffusion/models/controlnet/t2iadapter_skectch-fp16.safetensors
+    wget -qnc --content-disposition  "https://huggingface.co/TencentARC/t2i-adapter-canny-sdxl-1.0/resolve/main/diffusion_pytorch_model.fp16.safetensors" -O /opt/storage/stable_diffusion/models/controlnet/t2iadapter_canny-fp16.safetensors
+    wget -qnc --content-disposition  "https://huggingface.co/TencentARC/t2i-adapter-depth-zoe-sdxl-1.0/resolve/main/diffusion_pytorch_model.fp16.safetensors" -O /opt/storage/stable_diffusion/models/controlnet/t2iadapter_depth-zoe-fp16.safetensors
+        wget -qnc --content-disposition  "https://huggingface.co/TencentARC/t2i-adapter-depth-midas-sdxl-1.0/resolve/main/diffusion_pytorch_model.fp16.safetensors" -O /opt/storage/stable_diffusion/models/controlnet/t2iadapter_depth-midas-fp16.safetensors
+    wget -qnc --content-disposition  "https://huggingface.co/TencentARC/t2i-adapter-openposs-sdxl-1.0/resolve/main/diffusion_pytorch_model.fp16.safetensors" -O /opt/storage/stable_diffusion/models/controlnet/t2iadapter_openpose-fp16.safetensors
+
+
     cd /opt/ComfyUI && \
     micromamba run -n comfyui -e LD_PRELOAD=libtcmalloc.so python main.py \
         --cpu \
