@@ -32,11 +32,12 @@ NODES=(
     "https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite"
     "https://github.com/Fannovel16/comfyui_controlnet_aux"
     "https://github.com/kijai/ComfyUI-Marigold"
+    "https://github.com/Amorano/Jovimetrix"
 )
 
 CHECKPOINT_MODELS=(
      "https://civitai.com/api/download/models/354657"
-     "https://civitai.com/api/download/models/471120"
+     "https://civitai.com/api/download/models/471120?token=dd2e86188faf31ecef4ba9fb273de0b6"
     #"https://huggingface.co/runwayml/stable-diffusion-v1-5/resolve/main/v1-5-pruned-emaonly.ckpt"
     #"https://huggingface.co/stabilityai/stable-diffusion-2-1/resolve/main/v2-1_768-ema-pruned.ckpt"
     #"https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0/resolve/main/sd_xl_base_1.0.safetensors"
