@@ -174,8 +174,8 @@ function build_extra_start() {
     wget -nc --content-disposition "https://huggingface.co/hotshotco/Hotshot-XL/resolve/main/hsxl_temporal_layers.safetensors" -O "$ANIMATEDIFF_DIR/hsxl_temporal_layers.safetensors"
 
     # Marigold
-    cd "$BASE_DIR/diffusers"
-    git clone https://huggingface.co/Bingxin/Marigold
+    # cd "$BASE_DIR/diffusers"
+    # git clone https://huggingface.co/Bingxin/Marigold
 
     cd /opt/ComfyUI
     source "$COMFYUI_VENV/bin/activate"
