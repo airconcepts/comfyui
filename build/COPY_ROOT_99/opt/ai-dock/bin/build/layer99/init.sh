@@ -127,10 +127,13 @@ function build_extra_start() {
     # Download models for instandid
     INSTANTID_DIR="$BASE_DIR/instantid"
     mkdir -p "$INSTANTID_DIR"
-    wget -qnc --content-disposition  -P "$INSTANTID_DIR" "https://huggingface.co/MonsterMMORPG/tools/resolve/main/antelopev2.zip"
-
-    unzip -q -o /opt/storage/stable_diffusion/models/insightface/models/antelopev2.zip -d /opt/storage/stable_diffusion/models/insightface/models/
     wget -qnc --content-disposition  -P "$INSTANTID_DIR" "https://huggingface.co/InstantX/InstantID/resolve/main/ip-adapter.bin"
+
+    
+    INSIGHTFACE_DIR="$BASE_DIR/insightface/models"
+    mkdir -p "$INSIGHTFACE_DIR"
+    wget -qnc --content-disposition  -P "$INSIGHTFACE_DIR" "https://huggingface.co/MonsterMMORPG/tools/resolve/main/antelopev2.zip"
+    unzip -q -o "$INSIGHTFACE_DIR/antelopev2.zip" -d "$INSIGHTFACE_DIR"
      
     # Download grounding dino model
     GROUNDING_DINO_DIR="$BASE_DIR/grounding-dino"
