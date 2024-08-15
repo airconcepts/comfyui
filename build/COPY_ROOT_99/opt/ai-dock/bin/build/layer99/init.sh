@@ -164,7 +164,7 @@ function build_extra_start() {
     wget -qnc --content-disposition  "https://huggingface.co/TencentARC/t2i-adapter-canny-sdxl-1.0/resolve/main/diffusion_pytorch_model.fp16.safetensors" -O "$CONTROLNET_DIR/t2iadapter_canny-fp16.safetensors"
     wget -qnc --content-disposition  "https://huggingface.co/TencentARC/t2i-adapter-depth-zoe-sdxl-1.0/resolve/main/diffusion_pytorch_model.fp16.safetensors" -O "$CONTROLNET_DIR/t2iadapter_depth-zoe-fp16.safetensors"
     wget -qnc --content-disposition  "https://huggingface.co/TencentARC/t2i-adapter-depth-midas-sdxl-1.0/resolve/main/diffusion_pytorch_model.fp16.safetensors" -O "$CONTROLNET_DIR/t2iadapter_depth-midas-fp16.safetensors"
-    wget -qnc --content-disposition  "https://huggingface.co/TencentARC/t2i-adapter-openposs-sdxl-1.0/resolve/main/diffusion_pytorch_model.fp16.safetensors" -O "$CONTROLNET_DIR/t2iadapter_openpose-fp16.safetensors"
+    wget -qnc --content-disposition  "https://huggingface.co/TencentARC/t2i-adapter-openpose-sdxl-1.0/resolve/main/diffusion_pytorch_model.safetensors" -O "$CONTROLNET_DIR/t2iadapter_openpose-fp16.safetensors"
     wget -qnc --content-disposition  "https://huggingface.co/InstantX/InstantID/resolve/main/ControlNetModel/diffusion_pytorch_model.safetensors" -O "$CONTROLNET_DIR/instantid-fp16.safetensors"
     wget -qnc --content-disposition  "https://huggingface.co/TTPlanet/TTPLanet_SDXL_Controlnet_Tile_Realistic/resolve/main/TTPLANET_Controlnet_Tile_realistic_v2_fp16.safetensors" -O "$CONTROLNET_DIR/TTPLANET_Controlnet_Tile_realistic_v2_fp16.safetensors"
 
