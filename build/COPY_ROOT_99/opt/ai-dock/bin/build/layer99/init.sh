@@ -27,15 +27,21 @@ NODES=(
     "https://github.com/storyicon/comfyui_segment_anything"
     "https://github.com/cubiq/ComfyUI_IPAdapter_plus"
     "https://github.com/cubiq/ComfyUI_essentials"
+    "https://github.com/kijai/ComfyUI-KJNodes"
+    "https://github.com/Kosinkadink/ComfyUI-AnimateDiff-Evolved"
+    "https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite"
+    "https://github.com/Fannovel16/comfyui_controlnet_aux"
+    "https://github.com/kijai/ComfyUI-Marigold"
 )
 
 CHECKPOINT_MODELS=(
      "https://civitai.com/api/download/models/354657"
+     "https://civitai.com/api/download/models/471120"
     #"https://huggingface.co/runwayml/stable-diffusion-v1-5/resolve/main/v1-5-pruned-emaonly.ckpt"
     #"https://huggingface.co/stabilityai/stable-diffusion-2-1/resolve/main/v2-1_768-ema-pruned.ckpt"
     #"https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0/resolve/main/sd_xl_base_1.0.safetensors"
     #"https://huggingface.co/stabilityai/stable-diffusion-xl-refiner-1.0/resolve/main/sd_xl_refiner_1.0.safetensors"
-    "https://huggingface.co/stabilityai/stable-cascade/resolve/main/comfyui_checkpoints/stable_cascade_stage_c.safetensors"
+    # "https://huggingface.co/stabilityai/stable-cascade/resolve/main/comfyui_checkpoints/stable_cascade_stage_c.safetensors"
 )
 
 UNET_MODELS=(
@@ -54,13 +60,12 @@ VAE_MODELS=(
 )
 
 ESRGAN_MODELS=(
-    #"https://huggingface.co/ai-forever/Real-ESRGAN/resolve/main/RealESRGAN_x4.pth"
-    #"https://huggingface.co/FacehugmanIII/4x_foolhardy_Remacri/resolve/main/4x_foolhardy_Remacri.pth"
+    "https://huggingface.co/ai-forever/Real-ESRGAN/resolve/main/RealESRGAN_x4.pth"
+    "https://huggingface.co/FacehugmanIII/4x_foolhardy_Remacri/resolve/main/4x_foolhardy_Remacri.pth"
     "https://huggingface.co/Akumetsu971/SD_Anime_Futuristic_Armor/resolve/main/4x_NMKD-Siax_200k.pth"
 )
 
 CONTROLNET_MODELS=(
-    "https://huggingface.co/InstantX/InstantID/resolve/main/ControlNetModel/diffusion_pytorch_model.safetensors"
     # "https://huggingface.co/stabilityai/stable-cascade/resolve/main/controlnet/canny.safetensors"
     #"https://huggingface.co/webui/ControlNet-modules-safetensors/resolve/main/control_canny-fp16.safetensors"
     #"https://huggingface.co/webui/ControlNet-modules-safetensors/resolve/main/control_depth-fp16.safetensors"
@@ -105,44 +110,68 @@ function build_extra_start() {
         "/opt/storage/stable_diffusion/models/esrgan" \
         "${ESRGAN_MODELS[@]}"
 
-    # Downoad clip vision
-    mkdir -p /opt/storage/stable_diffusion/models/clip_vision
-    wget -qnc --content-disposition "https://huggingface.co/h94/IP-Adapter/resolve/main/models/image_encoder/model.safetensors" -O /opt/storage/stable_diffusion/models/clip_vision/CLIP-ViT-H-14-laion2B-s32B-b79K.safetensors
+    BASE_DIR="/opt/storage/stable_diffusion/models"
+
+    # Download clip vision
+    CLIP_VISION_DIR="$BASE_DIR/clip_vision"
+    mkdir -p "$CLIP_VISION_DIR"
+    wget -qnc --content-disposition "https://huggingface.co/h94/IP-Adapter/resolve/main/models/image_encoder/model.safetensors" -O "$CLIP_VISION_DIR/CLIP-ViT-H-14-laion2B-s32B-b79K.safetensors"
      
     # Download ipadapter
-
-    wget -qnc --content-disposition "https://huggingface.co/h94/IP-Adapter/resolve/main/sdxl_models/ip-adapter-plus_sdxl_vit-h.safetensors" -P /opt/storage/stable_diffusion/models/ipadapter
-
-    wget -qnc --content-disposition "https://huggingface.co/ostris/ip-composition-adapter/resolve/main/ip_plus_composition_sdxl.safetensors" -P /opt/storage/stable_diffusion/models/ipadapter
+    IPADAPTER_DIR="$BASE_DIR/ipadapter"
+    mkdir -p "$IPADAPTER_DIR"
+    wget -qnc --content-disposition "https://huggingface.co/h94/IP-Adapter/resolve/main/sdxl_models/ip-adapter-plus_sdxl_vit-h.safetensors" -P "$IPADAPTER_DIR"
+    wget -qnc --content-disposition "https://huggingface.co/ostris/ip-composition-adapter/resolve/main/ip_plus_composition_sdxl.safetensors" -P "$IPADAPTER_DIR"
 
     # Download models for instandid
-    wget -qnc --content-disposition  -P /opt/storage/stable_diffusion/models/insightface/models "https://huggingface.co/MonsterMMORPG/tools/resolve/main/antelopev2.zip"
-
+    INSTANTID_DIR="$BASE_DIR/instantid"
+    mkdir -p "$INSTANTID_DIR"
+    wget -qnc --content-disposition  -P "$INSTANTID_DIR" "https://huggingface.co/MonsterMMORPG/tools/resolve/main/antelopev2.zip"
 
     unzip -q -o /opt/storage/stable_diffusion/models/insightface/models/antelopev2.zip -d /opt/storage/stable_diffusion/models/insightface/models/
-    wget -qnc --content-disposition  -P /opt/storage/stable_diffusion/models/instantid "https://huggingface.co/InstantX/InstantID/resolve/main/ip-adapter.bin"
+    wget -qnc --content-disposition  -P "$INSTANTID_DIR" "https://huggingface.co/InstantX/InstantID/resolve/main/ip-adapter.bin"
      
     # Download grounding dino model
-    wget -qnc --content-disposition  -P /opt/storage/stable_diffusion/models/grounding-dino "https://huggingface.co/ShilongLiu/GroundingDINO/resolve/main/GroundingDINO_SwinT_OGC.cfg.py"
-    wget -qnc --content-disposition  -P /opt/storage/stable_diffusion/models/grounding-dino "https://huggingface.co/ShilongLiu/GroundingDINO/resolve/main/groundingdino_swint_ogc.pth"
+    GROUNDING_DINO_DIR="$BASE_DIR/grounding-dino"
+    mkdir -p "$GROUNDING_DINO_DIR"
+    wget -qnc --content-disposition  -P "$GROUNDING_DINO_DIR" "https://huggingface.co/ShilongLiu/GroundingDINO/resolve/main/GroundingDINO_SwinT_OGC.cfg.py"
+    wget -qnc --content-disposition  -P "$GROUNDING_DINO_DIR" "https://huggingface.co/ShilongLiu/GroundingDINO/resolve/main/groundingdino_swint_ogc.pth"
 
     # Download models for bert base uncased
-    wget -qnc --content-disposition  -P /opt/storage/stable_diffusion/models/bert-base-uncased "https://huggingface.co/google-bert/bert-base-uncased/resolve/main/model.safetensors"
-    wget -qnc --content-disposition  -P /opt/storage/stable_diffusion/models/bert-base-uncased "https://huggingface.co/google-bert/bert-base-uncased/resolve/main/vocab.txt"
-    wget -qnc --content-disposition  -P /opt/storage/stable_diffusion/models/bert-base-uncased "https://huggingface.co/google-bert/bert-base-uncased/resolve/main/tokenizer_config.json"
-    wget -qnc --content-disposition  -P /opt/storage/stable_diffusion/models/bert-base-uncased "https://huggingface.co/google-bert/bert-base-uncased/resolve/main/config.json"
-    wget -qnc --content-disposition  -P /opt/storage/stable_diffusion/models/bert-base-uncased "https://huggingface.co/google-bert/bert-base-uncased/resolve/main/tokenizer.json"
+    BERT_BASE_UNCASED_DIR="/opt/storage/stable_diffusion/models/bert-base-uncased"
+    mkdir -p "$BERT_BASE_UNCASED_DIR"
+    wget -qnc --content-disposition  -P "$BERT_BASE_UNCASED_DIR" "https://huggingface.co/google-bert/bert-base-uncased/resolve/main/model.safetensors"
+    wget -qnc --content-disposition  -P "$BERT_BASE_UNCASED_DIR" "https://huggingface.co/google-bert/bert-base-uncased/resolve/main/vocab.txt"
+    wget -qnc --content-disposition  -P "$BERT_BASE_UNCASED_DIR" "https://huggingface.co/google-bert/bert-base-uncased/resolve/main/tokenizer_config.json"
+    wget -qnc --content-disposition  -P "$BERT_BASE_UNCASED_DIR" "https://huggingface.co/google-bert/bert-base-uncased/resolve/main/config.json"
+    wget -qnc --content-disposition  -P "$BERT_BASE_UNCASED_DIR" "https://huggingface.co/google-bert/bert-base-uncased/resolve/main/tokenizer.json"
 
     # Download models for segment anything
-    wget -qnc --content-disposition  -P /opt/storage/stable_diffusion/models/sams "https://dl.fbaipublicfiles.com/segment_anything/sam_vit_b_01ec64.pth"
+    SAM_DIR="$BASE_DIR/sams"
+    mkdir -p "$SAM_DIR"
+    wget -qnc --content-disposition  -P "$SAM_DIR" "https://dl.fbaipublicfiles.com/segment_anything/sam_vit_b_01ec64.pth"
+
 
     # Download controlnet models
-    wget -qnc --content-disposition  "https://huggingface.co/TencentARC/t2i-adapter-lineart-sdxl-1.0/resolve/main/diffusion_pytorch_model.fp16.safetensors" -O /opt/storage/stable_diffusion/models/controlnet/t2iadapter_lineart-fp16.safetensors
-    wget -qnc --content-disposition  "https://huggingface.co/TencentARC/t2i-adapter-sketch-sdxl-1.0/resolve/main/diffusion_pytorch_model.fp16.safetensors" -O /opt/storage/stable_diffusion/models/controlnet/t2iadapter_skectch-fp16.safetensors
-    wget -qnc --content-disposition  "https://huggingface.co/TencentARC/t2i-adapter-canny-sdxl-1.0/resolve/main/diffusion_pytorch_model.fp16.safetensors" -O /opt/storage/stable_diffusion/models/controlnet/t2iadapter_canny-fp16.safetensors
-    wget -qnc --content-disposition  "https://huggingface.co/TencentARC/t2i-adapter-depth-zoe-sdxl-1.0/resolve/main/diffusion_pytorch_model.fp16.safetensors" -O /opt/storage/stable_diffusion/models/controlnet/t2iadapter_depth-zoe-fp16.safetensors
-        wget -qnc --content-disposition  "https://huggingface.co/TencentARC/t2i-adapter-depth-midas-sdxl-1.0/resolve/main/diffusion_pytorch_model.fp16.safetensors" -O /opt/storage/stable_diffusion/models/controlnet/t2iadapter_depth-midas-fp16.safetensors
-    wget -qnc --content-disposition  "https://huggingface.co/TencentARC/t2i-adapter-openposs-sdxl-1.0/resolve/main/diffusion_pytorch_model.fp16.safetensors" -O /opt/storage/stable_diffusion/models/controlnet/t2iadapter_openpose-fp16.safetensors
+    CONTROLNET_DIR="$BASE_DIR/controlnet"
+    mkdir -p "$CONTROLNET_DIR"
+    wget -qnc --content-disposition  "https://huggingface.co/TencentARC/t2i-adapter-lineart-sdxl-1.0/resolve/main/diffusion_pytorch_model.fp16.safetensors" -O "$CONTROLNET_DIR/t2iadapter_lineart-fp16.safetensors"
+    wget -qnc --content-disposition  "https://huggingface.co/TencentARC/t2i-adapter-sketch-sdxl-1.0/resolve/main/diffusion_pytorch_model.fp16.safetensors" -O "$CONTROLNET_DIR/t2iadapter_skectch-fp16.safetensors"
+    wget -qnc --content-disposition  "https://huggingface.co/TencentARC/t2i-adapter-canny-sdxl-1.0/resolve/main/diffusion_pytorch_model.fp16.safetensors" -O "$CONTROLNET_DIR/t2iadapter_canny-fp16.safetensors"
+    wget -qnc --content-disposition  "https://huggingface.co/TencentARC/t2i-adapter-depth-zoe-sdxl-1.0/resolve/main/diffusion_pytorch_model.fp16.safetensors" -O "$CONTROLNET_DIR/t2iadapter_depth-zoe-fp16.safetensors"
+    wget -qnc --content-disposition  "https://huggingface.co/TencentARC/t2i-adapter-depth-midas-sdxl-1.0/resolve/main/diffusion_pytorch_model.fp16.safetensors" -O "$CONTROLNET_DIR/t2iadapter_depth-midas-fp16.safetensors"
+    wget -qnc --content-disposition  "https://huggingface.co/TencentARC/t2i-adapter-openposs-sdxl-1.0/resolve/main/diffusion_pytorch_model.fp16.safetensors" -O "$CONTROLNET_DIR/t2iadapter_openpose-fp16.safetensors"
+    wget -qnc --content-disposition  "https://huggingface.co/InstantX/InstantID/resolve/main/ControlNetModel/diffusion_pytorch_model.safetensors" -O "$CONTROLNET_DIR/instantid-fp16.safetensors"
+    wget -qnc --content-disposition  "https://huggingface.co/TTPlanet/TTPLanet_SDXL_Controlnet_Tile_Realistic/resolve/main/TTPLANET_Controlnet_Tile_realistic_v2_fp16.safetensors" -O "$CONTROLNET_DIR/TTPLANET_Controlnet_Tile_realistic_v2_fp16.safetensors"
+
+    # Download animatediff_models
+    ANIMATEDIFF_DIR="$BASE_DIR/animatediff_models"
+    mkdir -p "$ANIMATEDIFF_DIR"
+    wget -qnc --content-disposition "https://huggingface.co/hotshotco/Hotshot-XL/resolve/main/hsxl_temporal_layers.safetensors" -O "$ANIMATEDIFF_DIR/hsxl_temporal_layers.safetensors"
+
+    # Marigold
+    cd "$BASE_DIR/diffusers"
+    git clone https://huggingface.co/Bingxin/Marigold
 
     cd /opt/ComfyUI
     source "$COMFYUI_VENV/bin/activate"

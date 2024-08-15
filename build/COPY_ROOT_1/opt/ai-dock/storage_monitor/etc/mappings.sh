@@ -25,5 +25,6 @@ storage_map["stable_diffusion/models/instantid"]="/opt/ComfyUI/models/instantid"
 storage_map["stable_diffusion/models/grounding-dino"]="/opt/ComfyUI/models/grounding-dino"
 storage_map["stable_diffusion/models/bert-base-uncased"]="/opt/ComfyUI/models/bert-base-uncased"
 storage_map["stable_diffusion/models/sams"]="/opt/ComfyUI/models/sams"
+storage_map["stable_diffusion/models/animatediff_models"]="/opt/ComfyUI/models/animatediff_models"
 
 # Add more mappings for other repository directories as needed
